@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/AutoProvider.iml" filepath="$PROJECT_DIR$/AutoProvider.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/autoprovider/autoprovider.iml" filepath="$PROJECT_DIR$/autoprovider/autoprovider.iml" />
+      <module fileurl="file://$PROJECT_DIR$/autoprovider-annotations/autoprovider-annotations.iml" filepath="$PROJECT_DIR$/autoprovider-annotations/autoprovider-annotations.iml" />
+      <module fileurl="file://$PROJECT_DIR$/autoprovider-compiler/autoprovider-compiler.iml" filepath="$PROJECT_DIR$/autoprovider-compiler/autoprovider-compiler.iml" />
+    </modules>
+  </component>
+</project>

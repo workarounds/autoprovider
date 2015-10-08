@@ -1,0 +1,1 @@
+include ':app', ':autoprovider-compiler', ':autoprovider-annotations', ':autoprovider'
