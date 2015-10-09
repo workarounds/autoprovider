@@ -11,8 +11,12 @@ import in.workarounds.autoprovider.Table;
  */
 @Table
 public class Book {
-    @PrimaryKey @AutoIncrement @Column("_id") Long id;
-    @NotNull @Column String name;
-    @Column String author;
-    @Column Float rating;
+    @PrimaryKey @AutoIncrement @Column("_id")
+    public Long id;
+    @NotNull @Column
+    public String name;
+    @Column
+    public String author;
+    @Column
+    public Float rating;
 }

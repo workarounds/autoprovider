@@ -2,7 +2,9 @@ package in.workarounds.autoprovider.compiler;
 
 import com.google.auto.service.AutoService;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -30,6 +32,9 @@ public class ProviderProcessor extends AbstractProcessor {
     private Filer filer;
     private Messager messager;
 
+    private AnnotatedProvider provider;
+    private List<AnnotatedTable> tables = new ArrayList<>();
+
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
@@ -43,12 +48,37 @@ public class ProviderProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
-        for(Element annotatedElement : roundEnv.getElementsAnnotatedWith(Table.class)) {
-            if(annotatedElement.getKind() != ElementKind.CLASS) {
-                error(annotatedElement, "only a class should be annotated with @%s", Table.class.getSimpleName());
+        TypeElement providerElement = getProviderElement(roundEnv);
+        if(providerElement != null) {
+            provider = new AnnotatedProvider(providerElement, elementUtils);
+        }
+
+        for(Element tableElement : roundEnv.getElementsAnnotatedWith(Table.class)) {
+            if(tableElement.getKind() != ElementKind.CLASS) {
+                error(tableElement, "only a class should be annotated with @%s", Table.class.getSimpleName());
                 return true;
+            } else {
+                try {
+                    tables.add(new AnnotatedTable((TypeElement) tableElement, elementUtils));
+                } catch (IllegalArgumentException e) {
+                    error(tableElement, e.getMessage());
+                }
             }
         }
+
+        if(provider != null && tables.size() != 0) {
+            // TODO generate code
+            message(null, "Given provider is : %s", provider.getProviderName());
+
+
+            for (AnnotatedTable table: tables) {
+                message(null, "Tables are: %s", table.getTableName());
+            }
+
+            provider = null;
+            tables.clear();
+        }
+
         return true;
     }
 
@@ -77,5 +107,44 @@ public class ProviderProcessor extends AbstractProcessor {
                 Diagnostic.Kind.ERROR,
                 String.format(msg, args),
                 e);
+    }
+
+    private void message(Element e, String msg, Object... args) {
+        messager.printMessage(
+                Diagnostic.Kind.NOTE,
+                String.format(msg, args),
+                e);
+    }
+
+    private void warn(Element e, String msg, Object... args) {
+        messager.printMessage(
+                Diagnostic.Kind.WARNING,
+                String.format(msg, args),
+                e);
+    }
+
+    private TypeElement getProviderElement(RoundEnvironment roundEnv) {
+        TypeElement providerElement = null;
+        int count = 0;
+        for (Element annotatedElement : roundEnv.getElementsAnnotatedWith(AutoProvider.class)) {
+            count = count + 1;
+            if(annotatedElement.getKind() == ElementKind.CLASS) {
+                providerElement = (TypeElement) annotatedElement;
+            } else {
+                error(annotatedElement, "@%s annotation used on a non-class %s",
+                        AutoProvider.class.getSimpleName(),
+                        annotatedElement.getSimpleName());
+                return null;
+            }
+        }
+        if(count == 1) {
+            return providerElement;
+        } else if(count == 0) {
+            return null;
+        } else {
+            error(null, "Multiple classes with @%s annotation found",
+                    AutoProvider.class.getSimpleName());
+            return null;
+        }
     }
 }

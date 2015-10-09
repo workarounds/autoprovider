@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 
@@ -26,6 +28,8 @@ public class AnnotatedTable {
         this.annotatedClassElement = classElement;
         this.elementUtils = elementUtils;
 
+        checkTableValidity();
+
         this.tableName = getTableName(classElement);
 
         this.columns = new ArrayList<>();
@@ -35,6 +39,24 @@ public class AnnotatedTable {
             }
         }
 
+    }
+
+    private void checkTableValidity() throws IllegalArgumentException {
+        // Check if an empty public constructor is given
+        for (Element enclosed : annotatedClassElement.getEnclosedElements()) {
+            if (enclosed.getKind() == ElementKind.CONSTRUCTOR) {
+                ExecutableElement constructorElement = (ExecutableElement) enclosed;
+                if (constructorElement.getParameters().size() == 0 && constructorElement.getModifiers()
+                        .contains(Modifier.PUBLIC)) {
+                    // Found an empty constructor
+                    return;
+                }
+            }
+        }
+
+        // No empty constructor found
+        throw new IllegalArgumentException(String.format("The class %s must provide an public empty default constructor",
+                annotatedClassElement.getQualifiedName().toString()));
     }
 
     private boolean isColumn(Element element) {
@@ -49,5 +71,13 @@ public class AnnotatedTable {
             name = element.getSimpleName().toString();
         }
         return StringUtils.toSnakeCase(name);
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public List<AnnotatedColumn> getColumns() {
+        return columns;
     }
 }
