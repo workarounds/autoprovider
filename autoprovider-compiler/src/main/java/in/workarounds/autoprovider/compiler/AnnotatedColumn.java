@@ -4,6 +4,7 @@ import java.util.Set;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 
 import in.workarounds.autoprovider.AutoIncrement;
@@ -18,7 +19,7 @@ import in.workarounds.autoprovider.compiler.utils.TypeMatcher;
  */
 public class AnnotatedColumn {
     private String columnName;
-    private Class<?> typeInObject;
+    private TypeMirror typeInObject;
     private TypeMatcher.SQLiteType typeInDb;
     private boolean primaryKey;
     private boolean notNull;
@@ -27,7 +28,7 @@ public class AnnotatedColumn {
     public AnnotatedColumn(Element columnElement, Elements elementUtils) throws IllegalArgumentException {
         if(isValidColumn(columnElement)) {
             columnName = getColumnName(columnElement);
-            typeInObject = columnElement.asType().getClass();
+            typeInObject = columnElement.asType();
             typeInDb = TypeMatcher.getSQLiteType(typeInObject);
 
             PrimaryKey primaryKeyAnn = columnElement.getAnnotation(PrimaryKey.class);
@@ -77,7 +78,7 @@ public class AnnotatedColumn {
         return columnName;
     }
 
-    public Class<?> getTypeInObject() {
+    public TypeMirror getTypeInObject() {
         return typeInObject;
     }
 
