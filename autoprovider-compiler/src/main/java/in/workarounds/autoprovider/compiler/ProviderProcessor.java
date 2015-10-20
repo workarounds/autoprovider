@@ -2,6 +2,7 @@ package in.workarounds.autoprovider.compiler;
 
 import com.google.auto.service.AutoService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -26,6 +27,8 @@ import in.workarounds.autoprovider.Table;
 
 @AutoService(Processor.class)
 public class ProviderProcessor extends AbstractProcessor {
+
+    private static final String OUTPUT_PACKAGE = "in.workarounds.autoprovider";
 
     private Types typeUtils;
     private Elements elementUtils;
@@ -67,9 +70,17 @@ public class ProviderProcessor extends AbstractProcessor {
         }
 
         if(provider != null && tables.size() != 0) {
+            for(AnnotatedTable table: tables) {
+                TableGenerator tableGenerator = new TableGenerator(table);
+                try {
+                    tableGenerator.generateTable(OUTPUT_PACKAGE, table.getTableName()).writeTo(filer);
+                } catch (IOException e) {
+                    error(null, e.getMessage());
+                    return false;
+                }
+            }
             // TODO generate code
             message(null, "Given provider is : %s", provider.getProviderName());
-
 
             for (AnnotatedTable table: tables) {
                 message(null, "Tables are: %s", table.getTableName());
