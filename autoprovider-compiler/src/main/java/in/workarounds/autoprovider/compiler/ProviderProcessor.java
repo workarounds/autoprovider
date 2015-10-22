@@ -24,6 +24,7 @@ import javax.tools.Diagnostic;
 
 import in.workarounds.autoprovider.AutoProvider;
 import in.workarounds.autoprovider.Table;
+import in.workarounds.autoprovider.compiler.utils.StringUtils;
 
 @AutoService(Processor.class)
 public class ProviderProcessor extends AbstractProcessor {
@@ -72,8 +73,11 @@ public class ProviderProcessor extends AbstractProcessor {
         if(provider != null && tables.size() != 0) {
             for(AnnotatedTable table: tables) {
                 TableGenerator tableGenerator = new TableGenerator(table);
+                CursorGenerator cursorGenerator = new CursorGenerator(table);
                 try {
-                    tableGenerator.generateTable(OUTPUT_PACKAGE, table.getTableName()).writeTo(filer);
+                    tableGenerator.generateTable(OUTPUT_PACKAGE, StringUtils.toCamelCase(table.getTableName())).writeTo(filer);
+                    cursorGenerator.generateTable(OUTPUT_PACKAGE,
+                            String.format("%sCursor", StringUtils.toCamelCase(table.getTableName()))).writeTo(filer);
                 } catch (IOException e) {
                     error(null, e.getMessage());
                     return false;

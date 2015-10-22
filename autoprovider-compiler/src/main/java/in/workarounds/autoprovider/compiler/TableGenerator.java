@@ -4,21 +4,14 @@ import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
-import com.sun.org.apache.bcel.internal.classfile.Code;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.activation.FileDataSource;
 import javax.lang.model.element.Modifier;
 
-import in.workarounds.autoprovider.compiler.utils.TypeMatcher;
-import jdk.nashorn.internal.runtime.regexp.joni.ast.AnchorNode;
-
-import static in.workarounds.autoprovider.compiler.utils.TypeMatcher.*;
+import static in.workarounds.autoprovider.compiler.utils.TypeMatcher.SQLiteType;
 
 /**
  * Created by mouli on 10/20/15.

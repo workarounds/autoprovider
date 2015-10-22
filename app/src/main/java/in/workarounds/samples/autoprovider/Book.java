@@ -9,10 +9,10 @@ import in.workarounds.autoprovider.Table;
 /**
  * Created by madki on 08/10/15.
  */
-@Table(name = "BookTable")
+@Table
 public class Book {
-    @PrimaryKey @AutoIncrement @Column("_id")
-    public Long id;
+    @PrimaryKey @AutoIncrement @Column
+    public long id;
     @NotNull @Column
     public String name;
     @Column
