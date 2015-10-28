@@ -77,7 +77,7 @@ public class ProviderProcessor extends AbstractProcessor {
                 try {
                     tableGenerator.generateTable(OUTPUT_PACKAGE, StringUtils.toCamelCase(table.getTableName())).writeTo(filer);
                     cursorGenerator.generateTable(OUTPUT_PACKAGE,
-                            String.format("%sCursor", StringUtils.toCamelCase(table.getTableName()))).writeTo(filer);
+                            String.format("%sCursor", table.getAnnotatedClassElement().getSimpleName())).writeTo(filer);
                 } catch (IOException e) {
                     error(null, e.getMessage());
                     return false;
