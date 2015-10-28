@@ -1,7 +1,5 @@
 package in.workarounds.autoprovider.compiler;
 
-import com.sun.xml.internal.bind.v2.runtime.IllegalAnnotationException;
-
 import java.util.ArrayList;
 import java.util.List;
 

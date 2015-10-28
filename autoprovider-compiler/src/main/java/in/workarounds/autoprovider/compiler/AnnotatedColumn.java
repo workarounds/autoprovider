@@ -1,8 +1,7 @@
 package in.workarounds.autoprovider.compiler;
 
-import com.sun.xml.internal.bind.v2.runtime.IllegalAnnotationException;
+import com.sun.org.apache.xpath.internal.operations.And;
 
-import java.util.IllegalFormatException;
 import java.util.Set;
 
 import javax.lang.model.element.Element;
@@ -10,6 +9,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 
+import in.workarounds.autoprovider.AndroidId;
 import in.workarounds.autoprovider.AutoIncrement;
 import in.workarounds.autoprovider.Column;
 import in.workarounds.autoprovider.NotNull;
@@ -22,6 +22,7 @@ import in.workarounds.autoprovider.compiler.utils.TypeMatcher;
  */
 public class AnnotatedColumn {
     private static final String ERROR_MSG_PRIMARY_KEY_NOT_LONG = "Primary key should be of type java.util.Long";
+    private static final String ERROR_MSG_ANDROID_ID_NOT_LONG = "Android id should be of type java.util.Long";
 
     private String columnName;
     private TypeMirror typeInObject;
@@ -35,6 +36,16 @@ public class AnnotatedColumn {
             columnName = getColumnName(columnElement);
             typeInObject = columnElement.asType();
             typeInDb = TypeMatcher.getSQLiteType(typeInObject);
+
+            AndroidId androidIdAnn = columnElement.getAnnotation(AndroidId.class);
+            if(androidIdAnn!=null) {
+                if(!typeInObject.toString().equals(Long.class.getCanonicalName())) {
+                    throw new IllegalArgumentException(ERROR_MSG_ANDROID_ID_NOT_LONG);
+                }
+                primaryKey = true;
+                autoIncrement = true;
+                notNull = true;
+            }
 
             PrimaryKey primaryKeyAnn = columnElement.getAnnotation(PrimaryKey.class);
             if(primaryKeyAnn != null) {
