@@ -1,5 +1,8 @@
 package in.workarounds.autoprovider.compiler;
 
+import com.sun.xml.internal.bind.v2.runtime.IllegalAnnotationException;
+
+import java.util.IllegalFormatException;
 import java.util.Set;
 
 import javax.lang.model.element.Element;
@@ -18,6 +21,8 @@ import in.workarounds.autoprovider.compiler.utils.TypeMatcher;
  * Created by madki on 08/10/15.
  */
 public class AnnotatedColumn {
+    private static final String ERROR_MSG_PRIMARY_KEY_NOT_LONG = "Primary key should be of type java.util.Long";
+
     private String columnName;
     private TypeMirror typeInObject;
     private TypeMatcher.SQLiteType typeInDb;
@@ -33,6 +38,9 @@ public class AnnotatedColumn {
 
             PrimaryKey primaryKeyAnn = columnElement.getAnnotation(PrimaryKey.class);
             if(primaryKeyAnn != null) {
+                if(!typeInObject.toString().equals(Long.class.getCanonicalName())) {
+                    throw new IllegalArgumentException(ERROR_MSG_PRIMARY_KEY_NOT_LONG);
+                }
                 primaryKey = true;
             }
 
