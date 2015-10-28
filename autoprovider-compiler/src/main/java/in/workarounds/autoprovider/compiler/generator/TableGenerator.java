@@ -1,4 +1,4 @@
-package in.workarounds.autoprovider.compiler;
+package in.workarounds.autoprovider.compiler.generator;
 
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.CodeBlock;
@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.lang.model.element.Modifier;
+
+import in.workarounds.autoprovider.compiler.AnnotatedColumn;
+import in.workarounds.autoprovider.compiler.AnnotatedTable;
 
 import static in.workarounds.autoprovider.compiler.utils.TypeMatcher.SQLiteType;
 

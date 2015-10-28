@@ -24,6 +24,7 @@ import javax.tools.Diagnostic;
 
 import in.workarounds.autoprovider.AutoProvider;
 import in.workarounds.autoprovider.Table;
+import in.workarounds.autoprovider.compiler.generator.TableGenerator;
 import in.workarounds.autoprovider.compiler.utils.StringUtils;
 
 @AutoService(Processor.class)

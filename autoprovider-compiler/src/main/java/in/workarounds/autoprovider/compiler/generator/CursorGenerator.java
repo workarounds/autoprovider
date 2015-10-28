@@ -1,4 +1,4 @@
-package in.workarounds.autoprovider.compiler;
+package in.workarounds.autoprovider.compiler.generator;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -12,6 +12,8 @@ import java.util.List;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
 
+import in.workarounds.autoprovider.compiler.AnnotatedColumn;
+import in.workarounds.autoprovider.compiler.AnnotatedTable;
 import in.workarounds.autoprovider.compiler.utils.ClassUtils;
 import in.workarounds.autoprovider.compiler.utils.StringUtils;
 
