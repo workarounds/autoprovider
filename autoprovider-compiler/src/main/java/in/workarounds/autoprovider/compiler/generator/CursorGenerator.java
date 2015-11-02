@@ -14,10 +14,11 @@ import javax.lang.model.type.TypeMirror;
 
 import in.workarounds.autoprovider.compiler.AnnotatedColumn;
 import in.workarounds.autoprovider.compiler.AnnotatedTable;
-import in.workarounds.autoprovider.compiler.utils.ClassUtils;
 import in.workarounds.autoprovider.compiler.utils.StringUtils;
 
-import static in.workarounds.autoprovider.compiler.utils.ClassUtils.*;
+import static in.workarounds.autoprovider.compiler.utils.ClassUtils.ABSTRACT_CURSOR;
+import static in.workarounds.autoprovider.compiler.utils.ClassUtils.CURSOR;
+import static in.workarounds.autoprovider.compiler.utils.ClassUtils.NONNULL;
 
 /**
  * Created by mouli on 10/22/15.
@@ -89,7 +90,7 @@ public class CursorGenerator {
         return builder.build();
     }
 
-    public JavaFile generateTable(String outputPackage, String outputName) {
+    public JavaFile generateCursor(String outputPackage, String outputName) {
         TypeSpec outputTable = buildClass(outputName);
         return JavaFile.builder(outputPackage, outputTable).build();
     }

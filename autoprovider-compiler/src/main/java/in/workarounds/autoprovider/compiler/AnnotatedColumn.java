@@ -1,7 +1,5 @@
 package in.workarounds.autoprovider.compiler;
 
-import com.sun.org.apache.xpath.internal.operations.And;
-
 import java.util.Set;
 
 import javax.lang.model.element.Element;

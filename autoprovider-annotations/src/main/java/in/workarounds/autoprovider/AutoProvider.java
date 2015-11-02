@@ -14,6 +14,6 @@ public @interface AutoProvider {
     String authority();
     String providerName() default "";
     String packageName() default "";
-    String databaseName();
+    String databaseFileName();
     int databaseVersion() default 1;
 }

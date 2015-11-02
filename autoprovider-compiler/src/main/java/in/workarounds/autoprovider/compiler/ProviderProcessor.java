@@ -24,13 +24,16 @@ import javax.tools.Diagnostic;
 
 import in.workarounds.autoprovider.AutoProvider;
 import in.workarounds.autoprovider.Table;
+import in.workarounds.autoprovider.compiler.generator.ProviderGenerator;
+import in.workarounds.autoprovider.compiler.generator.SQLiteOpenHelperGenerator;
 import in.workarounds.autoprovider.compiler.generator.TableGenerator;
+import in.workarounds.autoprovider.compiler.generator.CursorGenerator;
 import in.workarounds.autoprovider.compiler.utils.StringUtils;
 
 @AutoService(Processor.class)
 public class ProviderProcessor extends AbstractProcessor {
 
-    private static final String OUTPUT_PACKAGE = "in.workarounds.autoprovider";
+    public static final String OUTPUT_PACKAGE = "in.workarounds.autoprovider";
 
     private Types typeUtils;
     private Elements elementUtils;
@@ -72,12 +75,23 @@ public class ProviderProcessor extends AbstractProcessor {
         }
 
         if(provider != null && tables.size() != 0) {
+            ProviderGenerator providerGenerator = new ProviderGenerator(provider, tables);
+            System.out.println("############ " + provider.getProviderName());
+            SQLiteOpenHelperGenerator sqLiteOpenHelperGenerator = new SQLiteOpenHelperGenerator(provider, tables);
+            try {
+                providerGenerator.generateProvider(OUTPUT_PACKAGE, provider.getProviderName()).writeTo(filer);
+                sqLiteOpenHelperGenerator.generateSQLiteOpenHelper(OUTPUT_PACKAGE,
+                        SQLiteOpenHelperGenerator.mName).writeTo(filer);
+            } catch (IOException e) {
+                error(null, e.getMessage());
+                return false;
+            }
             for(AnnotatedTable table: tables) {
-                TableGenerator tableGenerator = new TableGenerator(table);
+                TableGenerator tableGenerator = new TableGenerator(provider, table);
                 CursorGenerator cursorGenerator = new CursorGenerator(table);
                 try {
                     tableGenerator.generateTable(OUTPUT_PACKAGE, StringUtils.toCamelCase(table.getTableName())).writeTo(filer);
-                    cursorGenerator.generateTable(OUTPUT_PACKAGE,
+                    cursorGenerator.generateCursor(OUTPUT_PACKAGE,
                             String.format("%sCursor", table.getAnnotatedClassElement().getSimpleName())).writeTo(filer);
                 } catch (IOException e) {
                     error(null, e.getMessage());

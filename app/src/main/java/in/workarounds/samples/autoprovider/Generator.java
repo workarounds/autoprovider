@@ -5,10 +5,10 @@ import in.workarounds.autoprovider.AutoProvider;
 /**
  * Created by madki on 08/10/15.
  */
-@AutoProvider(
+/*@AutoProvider(
         authority = "in.workarounds.samples.autoprovider.authority",
-        databaseName = "sample.db",
+        databaseFileName = "sample.db",
         databaseVersion = 1
-)
+)*/
 public final class Generator {
 }

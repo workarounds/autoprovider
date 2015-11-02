@@ -23,6 +23,7 @@ public class AnnotatedTable {
 
     private String tableName;
     private List<AnnotatedColumn> columns;
+    private AnnotatedColumn primaryColumn;
 
     public AnnotatedTable(TypeElement classElement, Elements elementUtils) throws IllegalArgumentException {
         this.annotatedClassElement = classElement;
@@ -36,11 +37,23 @@ public class AnnotatedTable {
         for(Element element: classElement.getEnclosedElements()) {
             if(element.getKind() == ElementKind.FIELD && isColumn(element)) {
                 try {
-                    columns.add(new AnnotatedColumn(element, elementUtils));
+                    AnnotatedColumn annotatedColumn = new AnnotatedColumn(element, elementUtils);
+                    columns.add(annotatedColumn);
+                    if(annotatedColumn.isPrimaryKey()) {
+                        if(primaryColumn==null) {
+                            primaryColumn = annotatedColumn;
+                        } else {
+                            throw new IllegalArgumentException("There can be only one primary key");
+                        }
+                    }
                 } catch (IllegalArgumentException e) {
                     throw new IllegalArgumentException(e.getMessage());
                 }
             }
+        }
+
+        if(primaryColumn==null) {
+            throw new IllegalArgumentException("There should be one primary key field");
         }
 
     }
@@ -83,6 +96,10 @@ public class AnnotatedTable {
 
     public List<AnnotatedColumn> getColumns() {
         return columns;
+    }
+
+    public AnnotatedColumn getPrimaryColumn() {
+        return primaryColumn;
     }
 
     public TypeElement getAnnotatedClassElement() {

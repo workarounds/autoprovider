@@ -17,6 +17,7 @@ public class AnnotatedProvider {
     private String packageName;
     private String authority;
     private String providerName;
+    private String databaseFileName;
     private int databaseVersion;
 
     public AnnotatedProvider(TypeElement classElement, Elements elementUtils) throws IllegalArgumentException {
@@ -47,6 +48,11 @@ public class AnnotatedProvider {
         providerName = annotation.providerName();
         if(StringUtils.isEmpty(providerName)) {
             providerName = annotatedClassElement.getSimpleName().toString();
+        }
+
+        databaseFileName = annotation.databaseFileName();
+        if(StringUtils.isEmpty(databaseFileName)) {
+            throw new IllegalArgumentException("Database file name is null or empty");
         }
 
         databaseVersion = annotation.databaseVersion();
@@ -82,5 +88,9 @@ public class AnnotatedProvider {
 
     public int getDatabaseVersion() {
         return databaseVersion;
+    }
+
+    public String getDatabaseFileName() {
+        return databaseFileName;
     }
 }
