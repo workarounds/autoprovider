@@ -2,6 +2,7 @@ package in.workarounds.autoprovider.compiler;
 
 import com.google.auto.service.AutoService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -23,9 +24,13 @@ import javax.tools.Diagnostic;
 
 import in.workarounds.autoprovider.AutoProvider;
 import in.workarounds.autoprovider.Table;
+import in.workarounds.autoprovider.compiler.generator.TableGenerator;
+import in.workarounds.autoprovider.compiler.utils.StringUtils;
 
 @AutoService(Processor.class)
 public class ProviderProcessor extends AbstractProcessor {
+
+    private static final String OUTPUT_PACKAGE = "in.workarounds.autoprovider";
 
     private Types typeUtils;
     private Elements elementUtils;
@@ -67,9 +72,20 @@ public class ProviderProcessor extends AbstractProcessor {
         }
 
         if(provider != null && tables.size() != 0) {
+            for(AnnotatedTable table: tables) {
+                TableGenerator tableGenerator = new TableGenerator(table);
+                CursorGenerator cursorGenerator = new CursorGenerator(table);
+                try {
+                    tableGenerator.generateTable(OUTPUT_PACKAGE, StringUtils.toCamelCase(table.getTableName())).writeTo(filer);
+                    cursorGenerator.generateTable(OUTPUT_PACKAGE,
+                            String.format("%sCursor", table.getAnnotatedClassElement().getSimpleName())).writeTo(filer);
+                } catch (IOException e) {
+                    error(null, e.getMessage());
+                    return false;
+                }
+            }
             // TODO generate code
             message(null, "Given provider is : %s", provider.getProviderName());
-
 
             for (AnnotatedTable table: tables) {
                 message(null, "Tables are: %s", table.getTableName());

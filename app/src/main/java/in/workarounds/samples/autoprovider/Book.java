@@ -11,8 +11,8 @@ import in.workarounds.autoprovider.Table;
  */
 @Table
 public class Book {
-    @PrimaryKey @AutoIncrement @Column("_id")
-    public Long id;
+    @PrimaryKey @AutoIncrement @Column
+    public long id;
     @NotNull @Column
     public String name;
     @Column

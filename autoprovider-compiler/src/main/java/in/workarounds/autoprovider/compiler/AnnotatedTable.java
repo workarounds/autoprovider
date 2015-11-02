@@ -35,7 +35,11 @@ public class AnnotatedTable {
         this.columns = new ArrayList<>();
         for(Element element: classElement.getEnclosedElements()) {
             if(element.getKind() == ElementKind.FIELD && isColumn(element)) {
-                columns.add(new AnnotatedColumn(element, elementUtils));
+                try {
+                    columns.add(new AnnotatedColumn(element, elementUtils));
+                } catch (IllegalArgumentException e) {
+                    throw new IllegalArgumentException(e.getMessage());
+                }
             }
         }
 
@@ -79,5 +83,9 @@ public class AnnotatedTable {
 
     public List<AnnotatedColumn> getColumns() {
         return columns;
+    }
+
+    public TypeElement getAnnotatedClassElement() {
+        return annotatedClassElement;
     }
 }
