@@ -1,6 +1,7 @@
 package in.workarounds.autoprovider.compiler.generator;
 
 import com.squareup.javapoet.ArrayTypeName;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
@@ -12,7 +13,10 @@ import java.util.List;
 import javax.lang.model.element.Modifier;
 
 import in.workarounds.autoprovider.compiler.AnnotatedColumn;
+import in.workarounds.autoprovider.compiler.AnnotatedProvider;
 import in.workarounds.autoprovider.compiler.AnnotatedTable;
+import in.workarounds.autoprovider.compiler.ProviderProcessor;
+import in.workarounds.autoprovider.compiler.utils.ClassUtils;
 
 import static in.workarounds.autoprovider.compiler.utils.TypeMatcher.SQLiteType;
 
@@ -29,28 +33,40 @@ public class TableGenerator {
     public static final String SQL_TYPE_REAL = "REAL";
     public static final String SQL_TYPE_BLOB = "BLOB";
 
-    private final String mTableName = "TABLE_NAME";
-    private final String mSQLCreate = "SQL_CREATE";
-    private final String mAllColumns = "ALL_COLUMNS";
-    private final String mSQLInsert = "SQL_INSERT";
-    private final String mSQLDrop = "SQL_DROP";
-    private final String mStatementPrefix = "WHERE_";
-    private final String mStatementSuffix = "_EQUALS";
-    private final String mStatementValue = "=?";
+    public static final String mTableName = "TABLE_NAME";
+    private static final String mContentUri = "CONTENT_URI";
+    public static final String mSQLCreate = "SQL_CREATE";
+    private static final String mAllColumns = "ALL_COLUMNS";
+    private static final String mSQLInsert = "SQL_INSERT";
+    private static final String mSQLDrop = "SQL_DROP";
+    private static final String mStatementPrefix = "WHERE_";
+    private static final String mStatementSuffix = "_EQUALS";
+    private static final String mStatementValue = "=?";
+    public static final String mDefaultOrder = "DEFAULT_ORDER";
 
     private final FieldSpec TABLE_NAME;
+    private final FieldSpec CONTENT_URI;
     private List<FieldSpec> columnFields = new ArrayList<>();
     private List<FieldSpec> queryFields = new ArrayList<>();
     private final FieldSpec ALL_COLUMNS;
     private final FieldSpec SQL_INSERT;
     private final FieldSpec SQL_CREATE;
     private final FieldSpec SQL_DROP;
+    private final FieldSpec DEFAULT_ORDER;
 
-    public TableGenerator(AnnotatedTable annotatedTable) {
+    public TableGenerator(AnnotatedProvider annotatedProvider, AnnotatedTable annotatedTable) {
 
         TABLE_NAME = FieldSpec.builder(String.class, mTableName)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
                 .initializer("$S", annotatedTable.getTableName()).build();
+
+        CONTENT_URI = FieldSpec.builder(ClassUtils.URI, mContentUri)
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+                .initializer("$T.parse($T.$L + \"/\" + $L)", ClassUtils.URI,
+                        ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, annotatedProvider.getProviderName()),
+                        ProviderGenerator.mContentBaseUri,
+                        mTableName)
+                .build();
 
         for(AnnotatedColumn annotatedColumn : annotatedTable.getColumns()) {
             FieldSpec column = FieldSpec.builder(String.class, annotatedColumn.getColumnName().toUpperCase())
@@ -84,6 +100,10 @@ public class TableGenerator {
                 .initializer("$S", getSQLCreateStatement(annotatedTable).toString())
                 .build();
 
+        DEFAULT_ORDER = FieldSpec.builder(String.class, mDefaultOrder)
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+                .initializer("$L + $S + $L", mTableName, ".", annotatedTable.getPrimaryColumn().getColumnName().toUpperCase())
+                .build();
     }
 
     private CodeBlock getAllColumnsValue(List<AnnotatedColumn> annotatedColumns) {
@@ -170,10 +190,12 @@ public class TableGenerator {
     public TypeSpec buildClass(String name) {
         TypeSpec.Builder builder = TypeSpec.interfaceBuilder(name)
                 .addModifiers(Modifier.PUBLIC)
-                .addField(TABLE_NAME);
+                .addField(TABLE_NAME)
+                .addField(CONTENT_URI);
 
         columnFields.forEach(builder::addField);
 
+        builder.addField(DEFAULT_ORDER);
         builder.addField(ALL_COLUMNS);
         builder.addField(SQL_CREATE);
         builder.addField(SQL_INSERT);
