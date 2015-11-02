@@ -17,6 +17,7 @@ import in.workarounds.autoprovider.compiler.AnnotatedProvider;
 import in.workarounds.autoprovider.compiler.AnnotatedTable;
 import in.workarounds.autoprovider.compiler.ProviderProcessor;
 import in.workarounds.autoprovider.compiler.utils.ClassUtils;
+import in.workarounds.autoprovider.compiler.utils.StringUtils;
 
 import static in.workarounds.autoprovider.compiler.utils.TypeMatcher.SQLiteType;
 
@@ -34,7 +35,7 @@ public class TableGenerator {
     public static final String SQL_TYPE_BLOB = "BLOB";
 
     public static final String mTableName = "TABLE_NAME";
-    private static final String mContentUri = "CONTENT_URI";
+    public static final String mContentUri = "CONTENT_URI";
     public static final String mSQLCreate = "SQL_CREATE";
     private static final String mAllColumns = "ALL_COLUMNS";
     private static final String mSQLInsert = "SQL_INSERT";
@@ -43,6 +44,8 @@ public class TableGenerator {
     private static final String mStatementSuffix = "_EQUALS";
     private static final String mStatementValue = "=?";
     public static final String mDefaultOrder = "DEFAULT_ORDER";
+
+    private final String mName;
 
     private final FieldSpec TABLE_NAME;
     private final FieldSpec CONTENT_URI;
@@ -55,6 +58,8 @@ public class TableGenerator {
     private final FieldSpec DEFAULT_ORDER;
 
     public TableGenerator(AnnotatedProvider annotatedProvider, AnnotatedTable annotatedTable) {
+
+        mName = StringUtils.toCamelCase(annotatedTable.getTableName());
 
         TABLE_NAME = FieldSpec.builder(String.class, mTableName)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
@@ -180,6 +185,10 @@ public class TableGenerator {
         }
         builder.add(" )");
         return builder.build();
+    }
+
+    public String getName() {
+        return mName;
     }
 
     public JavaFile generateTable(String outputPackage, String outputName) {

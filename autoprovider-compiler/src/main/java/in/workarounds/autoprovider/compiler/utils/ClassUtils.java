@@ -20,8 +20,10 @@ public interface ClassUtils {
     ClassName TARGET_API = ClassName.get("android.annotation", "TargetApi");
     ClassName LOG = ClassName.get("android.util", "Log");
     ClassName CONTENT_VALUES = ClassName.get("android.content", "ContentValues");
+    ClassName CONTENT_RESOLVER = ClassName.get("android.content", "ContentResolver");
 
     ClassName ABSTRACT_CURSOR = ClassName.get("in.workarounds.autoprovider", "AbstractCursor");
     ClassName BASE_PROVIDER = ClassName.get("in.workarounds.autoprovider", "BaseProvider");
     ClassName QUERY_PARAMS = ClassName.get("in.workarounds.autoprovider.BaseProvider", "QueryParams");
+    ClassName ABSTRACT_SELECTOR = ClassName.get("in.workarounds.autoprovider", "AbstractSelector");
 }

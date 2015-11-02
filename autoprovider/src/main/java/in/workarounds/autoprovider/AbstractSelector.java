@@ -258,6 +258,18 @@ public abstract class AbstractSelector<T extends AbstractSelector<?>> {
     protected Object[] toObjectArray(Boolean value) {
         return new Object[] { value };
     }
+    protected Object[] toObjectArray(Long... value) {
+        return new Object[] { value };
+    }
+    protected Object[] toObjectArray(Double... value) {
+        return new Object[] { value };
+    }
+    protected Object[] toObjectArray(Float... value) {
+        return new Object[] { value };
+    }
+    protected Object[] toObjectArray(Integer... value) {
+        return new Object[] { value };
+    }
 
 
     /**

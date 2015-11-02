@@ -26,9 +26,9 @@ import in.workarounds.autoprovider.AutoProvider;
 import in.workarounds.autoprovider.Table;
 import in.workarounds.autoprovider.compiler.generator.ProviderGenerator;
 import in.workarounds.autoprovider.compiler.generator.SQLiteOpenHelperGenerator;
+import in.workarounds.autoprovider.compiler.generator.SelectorGenerator;
 import in.workarounds.autoprovider.compiler.generator.TableGenerator;
 import in.workarounds.autoprovider.compiler.generator.CursorGenerator;
-import in.workarounds.autoprovider.compiler.utils.StringUtils;
 
 @AutoService(Processor.class)
 public class ProviderProcessor extends AbstractProcessor {
@@ -89,10 +89,12 @@ public class ProviderProcessor extends AbstractProcessor {
             for(AnnotatedTable table: tables) {
                 TableGenerator tableGenerator = new TableGenerator(provider, table);
                 CursorGenerator cursorGenerator = new CursorGenerator(table);
+                SelectorGenerator selectionGenerator = new SelectorGenerator(table);
                 try {
-                    tableGenerator.generateTable(OUTPUT_PACKAGE, StringUtils.toCamelCase(table.getTableName())).writeTo(filer);
+                    tableGenerator.generateTable(OUTPUT_PACKAGE, tableGenerator.getName()).writeTo(filer);
                     cursorGenerator.generateCursor(OUTPUT_PACKAGE,
-                            String.format("%sCursor", table.getAnnotatedClassElement().getSimpleName())).writeTo(filer);
+                            table.getCursorName()).writeTo(filer);
+                    selectionGenerator.generateSelection(OUTPUT_PACKAGE, selectionGenerator.getOutputFileName()).writeTo(filer);
                 } catch (IOException e) {
                     error(null, e.getMessage());
                     return false;

@@ -90,6 +90,10 @@ public class AnnotatedTable {
         return StringUtils.toSnakeCase(name);
     }
 
+    public String getCursorName() {
+        return String.format("%sCursor", annotatedClassElement.getSimpleName());
+    }
+
     public String getTableName() {
         return tableName;
     }
