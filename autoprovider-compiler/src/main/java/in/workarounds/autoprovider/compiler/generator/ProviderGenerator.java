@@ -20,7 +20,6 @@ import in.workarounds.autoprovider.compiler.AnnotatedTable;
 import in.workarounds.autoprovider.compiler.ProviderProcessor;
 import in.workarounds.autoprovider.compiler.utils.ClassUtils;
 import in.workarounds.autoprovider.compiler.utils.StringUtils;
-import javafx.scene.control.Tab;
 
 /**
  * Created by mouli on 10/29/15.
