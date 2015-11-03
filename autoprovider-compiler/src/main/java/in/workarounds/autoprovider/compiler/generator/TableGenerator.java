@@ -202,15 +202,13 @@ public class TableGenerator {
                 .addField(TABLE_NAME)
                 .addField(CONTENT_URI);
 
-        columnFields.forEach(builder::addField);
-
+        builder.addFields(columnFields);
         builder.addField(DEFAULT_ORDER);
         builder.addField(ALL_COLUMNS);
         builder.addField(SQL_CREATE);
         builder.addField(SQL_INSERT);
         builder.addField(SQL_DROP);
-
-        queryFields.forEach(builder::addField);
+        builder.addFields(queryFields);
 
         return builder.build();
     }

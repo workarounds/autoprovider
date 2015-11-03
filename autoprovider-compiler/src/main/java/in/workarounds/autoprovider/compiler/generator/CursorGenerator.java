@@ -101,9 +101,7 @@ public class CursorGenerator {
                 .superclass(ABSTRACT_CURSOR);
 
         builder.addMethod(CONSTRUCTOR);
-
-        methods.forEach(builder::addMethod);
-
+        builder.addMethods(methods);
         builder.addMethod(GET_OBJECT);
 
         return builder.build();
