@@ -21,9 +21,11 @@ public interface ClassUtils {
     ClassName LOG = ClassName.get("android.util", "Log");
     ClassName CONTENT_VALUES = ClassName.get("android.content", "ContentValues");
     ClassName CONTENT_RESOLVER = ClassName.get("android.content", "ContentResolver");
+    ClassName NULLABLE = ClassName.get("android.support.annotation", "Nullable");
 
     ClassName ABSTRACT_CURSOR = ClassName.get("in.workarounds.autoprovider", "AbstractCursor");
     ClassName BASE_PROVIDER = ClassName.get("in.workarounds.autoprovider", "BaseProvider");
     ClassName QUERY_PARAMS = ClassName.get("in.workarounds.autoprovider.BaseProvider", "QueryParams");
     ClassName ABSTRACT_SELECTOR = ClassName.get("in.workarounds.autoprovider", "AbstractSelector");
+    ClassName ABSTRACT_VALUES = ClassName.get("in.workarounds.autoprovider", "AbstractValues");
 }

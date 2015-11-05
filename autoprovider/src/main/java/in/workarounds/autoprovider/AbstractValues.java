@@ -6,6 +6,7 @@ import android.content.Context;
 import android.net.Uri;
 
 public abstract class AbstractValues {
+    //Please don't change this variable name :D
     protected final ContentValues mContentValues = new ContentValues();
 
     /**

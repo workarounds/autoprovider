@@ -87,11 +87,19 @@ public class AnnotatedTable {
         if(name.trim().isEmpty()) {
             name = String.format("%sTable", element.getSimpleName().toString());
         }
-        return StringUtils.toSnakeCase(name);
+        return StringUtils.toCamelCase(name);
     }
 
     public String getCursorName() {
         return String.format("%sCursor", annotatedClassElement.getSimpleName());
+    }
+
+    public String getSelectorName() {
+        return String.format("%sSelector", annotatedClassElement.getSimpleName());
+    }
+
+    public String getValuesName() {
+        return String.format("%sValues", annotatedClassElement.getSimpleName());
     }
 
     public String getTableName() {

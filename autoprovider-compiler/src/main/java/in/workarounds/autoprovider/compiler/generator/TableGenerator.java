@@ -45,8 +45,6 @@ public class TableGenerator {
     private static final String mStatementValue = "=?";
     public static final String mDefaultOrder = "DEFAULT_ORDER";
 
-    private final String mName;
-
     private final FieldSpec TABLE_NAME;
     private final FieldSpec CONTENT_URI;
     private List<FieldSpec> columnFields = new ArrayList<>();
@@ -58,8 +56,6 @@ public class TableGenerator {
     private final FieldSpec DEFAULT_ORDER;
 
     public TableGenerator(AnnotatedProvider annotatedProvider, AnnotatedTable annotatedTable) {
-
-        mName = StringUtils.toCamelCase(annotatedTable.getTableName());
 
         TABLE_NAME = FieldSpec.builder(String.class, mTableName)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
@@ -185,10 +181,6 @@ public class TableGenerator {
         }
         builder.add(" )");
         return builder.build();
-    }
-
-    public String getName() {
-        return mName;
     }
 
     public JavaFile generateTable(String outputPackage, String outputName) {

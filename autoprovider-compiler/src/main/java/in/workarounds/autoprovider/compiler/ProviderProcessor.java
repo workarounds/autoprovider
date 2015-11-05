@@ -29,6 +29,7 @@ import in.workarounds.autoprovider.compiler.generator.SQLiteOpenHelperGenerator;
 import in.workarounds.autoprovider.compiler.generator.SelectorGenerator;
 import in.workarounds.autoprovider.compiler.generator.TableGenerator;
 import in.workarounds.autoprovider.compiler.generator.CursorGenerator;
+import in.workarounds.autoprovider.compiler.generator.ValuesGenerator;
 
 @AutoService(Processor.class)
 public class ProviderProcessor extends AbstractProcessor {
@@ -90,11 +91,12 @@ public class ProviderProcessor extends AbstractProcessor {
                 TableGenerator tableGenerator = new TableGenerator(provider, table);
                 CursorGenerator cursorGenerator = new CursorGenerator(table);
                 SelectorGenerator selectionGenerator = new SelectorGenerator(table);
+                ValuesGenerator valuesGenerator = new ValuesGenerator(table);
                 try {
-                    tableGenerator.generateTable(OUTPUT_PACKAGE, tableGenerator.getName()).writeTo(filer);
-                    cursorGenerator.generateCursor(OUTPUT_PACKAGE,
-                            table.getCursorName()).writeTo(filer);
-                    selectionGenerator.generateSelection(OUTPUT_PACKAGE, selectionGenerator.getOutputFileName()).writeTo(filer);
+                    tableGenerator.generateTable(OUTPUT_PACKAGE, table.getTableName()).writeTo(filer);
+                    cursorGenerator.generateCursor(OUTPUT_PACKAGE, table.getCursorName()).writeTo(filer);
+                    valuesGenerator.generateValues(OUTPUT_PACKAGE, table.getValuesName()).writeTo(filer);
+                    selectionGenerator.generateSelection(OUTPUT_PACKAGE, table.getSelectorName()).writeTo(filer);
                 } catch (IOException e) {
                     error(null, e.getMessage());
                     return false;

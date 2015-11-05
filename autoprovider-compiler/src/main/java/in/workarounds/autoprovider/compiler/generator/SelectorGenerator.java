@@ -39,9 +39,7 @@ public class SelectorGenerator {
 
     private static final String nBaseUri = "baseUri";
     private static final String nQuery = "query";
-
-    private final String mName;
-
+    
     private final MethodSpec BASE_URI;
     private final MethodSpec QUERY1;
     private final MethodSpec QUERY2;
@@ -51,9 +49,7 @@ public class SelectorGenerator {
     private List<MethodSpec> SELECTION_METHODS = new ArrayList<>();
 
     public SelectorGenerator(AnnotatedTable annotatedTable) {
-
-        mName = String.format("%sSelector", annotatedTable.getAnnotatedClassElement().getSimpleName());
-
+        
         BASE_URI = MethodSpec.methodBuilder(nBaseUri)
                 .addModifiers(Modifier.PROTECTED)
                 .addAnnotation(Override.class)
@@ -111,7 +107,7 @@ public class SelectorGenerator {
                         .addModifiers(Modifier.PUBLIC)
                         .addParameter(String[].class, paramValue)
                         .varargs()
-                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, mName))
+                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, annotatedTable.getSelectorName()))
                         .addStatement("addEquals($T.$L, $L)", TABLE, column.getColumnName().toUpperCase(), paramValue)
                         .addStatement("return this")
                         .build();
@@ -121,7 +117,7 @@ public class SelectorGenerator {
                         .addModifiers(Modifier.PUBLIC)
                         .addParameter(String[].class, paramValue)
                         .varargs()
-                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, mName))
+                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, annotatedTable.getSelectorName()))
                         .addStatement("addNotEquals($T.$L, $L)", TABLE, column.getColumnName().toUpperCase(), paramValue)
                         .addStatement("return this")
                         .build();
@@ -130,7 +126,7 @@ public class SelectorGenerator {
                         .addModifiers(Modifier.PUBLIC)
                         .addParameter(String[].class, paramValue)
                         .varargs()
-                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, mName))
+                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, annotatedTable.getSelectorName()))
                         .addStatement("addLike($T.$L, $L)", TABLE, column.getColumnName().toUpperCase(), paramValue)
                         .addStatement("return this")
                         .build();
@@ -139,7 +135,7 @@ public class SelectorGenerator {
                         .addModifiers(Modifier.PUBLIC)
                         .addParameter(String[].class, paramValue)
                         .varargs()
-                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, mName))
+                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, annotatedTable.getSelectorName()))
                         .addStatement("addContains($T.$L, $L)", TABLE, column.getColumnName().toUpperCase(), paramValue)
                         .addStatement("return this")
                         .build();
@@ -148,7 +144,7 @@ public class SelectorGenerator {
                         .addModifiers(Modifier.PUBLIC)
                         .addParameter(String[].class, paramValue)
                         .varargs()
-                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, mName))
+                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, annotatedTable.getSelectorName()))
                         .addStatement("addStartsWith($T.$L, $L)", TABLE, column.getColumnName().toUpperCase(), paramValue)
                         .addStatement("return this")
                         .build();
@@ -157,7 +153,7 @@ public class SelectorGenerator {
                         .addModifiers(Modifier.PUBLIC)
                         .addParameter(String[].class, paramValue)
                         .varargs()
-                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, mName))
+                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, annotatedTable.getSelectorName()))
                         .addStatement("addEndsWith($T.$L, $L)", TABLE, column.getColumnName().toUpperCase(), paramValue)
                         .addStatement("return this")
                         .build();
@@ -174,7 +170,7 @@ public class SelectorGenerator {
                         .addModifiers(Modifier.PUBLIC)
                         .addParameter(ArrayTypeName.of(ClassName.get(column.getTypeInObject())), paramValue)
                         .varargs()
-                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, mName))
+                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, annotatedTable.getSelectorName()))
                         .addStatement("addEquals($T.$L, toObjectArray($L))", TABLE, column.getColumnName().toUpperCase(), paramValue)
                         .addStatement("return this")
                         .build();
@@ -184,7 +180,7 @@ public class SelectorGenerator {
                         .addModifiers(Modifier.PUBLIC)
                         .addParameter(ArrayTypeName.of(ClassName.get(column.getTypeInObject())), paramValue)
                         .varargs()
-                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, mName))
+                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, annotatedTable.getSelectorName()))
                         .addStatement("addNotEquals($T.$L, toObjectArray($L))", TABLE, column.getColumnName().toUpperCase(), paramValue)
                         .addStatement("return this")
                         .build();
@@ -192,7 +188,7 @@ public class SelectorGenerator {
                 MethodSpec GREATER_THAN = MethodSpec.methodBuilder(String.format("%s%s", column.getColumnName(), SUFFIX_GT))
                         .addModifiers(Modifier.PUBLIC)
                         .addParameter(ClassName.get(column.getTypeInObject()), paramValue)
-                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, mName))
+                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, annotatedTable.getSelectorName()))
                         .addStatement("addGreaterThan($T.$L, $L)", TABLE, column.getColumnName().toUpperCase(), paramValue)
                         .addStatement("return this")
                         .build();
@@ -200,7 +196,7 @@ public class SelectorGenerator {
                 MethodSpec GREATER_THAN_OR_EQUALS = MethodSpec.methodBuilder(String.format("%s%s", column.getColumnName(), SUFFIX_GT_EQ))
                         .addModifiers(Modifier.PUBLIC)
                         .addParameter(ClassName.get(column.getTypeInObject()), paramValue)
-                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, mName))
+                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, annotatedTable.getSelectorName()))
                         .addStatement("addGreaterThanOrEquals($T.$L, $L)", TABLE, column.getColumnName().toUpperCase(), paramValue)
                         .addStatement("return this")
                         .build();
@@ -208,7 +204,7 @@ public class SelectorGenerator {
                 MethodSpec LESS_THAN = MethodSpec.methodBuilder(String.format("%s%s", column.getColumnName(), SUFFIX_LT))
                         .addModifiers(Modifier.PUBLIC)
                         .addParameter(ClassName.get(column.getTypeInObject()), paramValue)
-                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, mName))
+                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, annotatedTable.getSelectorName()))
                         .addStatement("addLessThan($T.$L, $L)", TABLE, column.getColumnName().toUpperCase(), paramValue)
                         .addStatement("return this")
                         .build();
@@ -216,7 +212,7 @@ public class SelectorGenerator {
                 MethodSpec LESS_THAN_OR_EQUALS = MethodSpec.methodBuilder(String.format("%s%s", column.getColumnName(), SUFFIX_LT_EQ))
                         .addModifiers(Modifier.PUBLIC)
                         .addParameter(ClassName.get(column.getTypeInObject()), paramValue)
-                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, mName))
+                        .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, annotatedTable.getSelectorName()))
                         .addStatement("addLessThanOrEquals($T.$L, $L)", TABLE, column.getColumnName().toUpperCase(), paramValue)
                         .addStatement("return this")
                         .build();
@@ -233,14 +229,14 @@ public class SelectorGenerator {
             MethodSpec ORDER_BY1 = MethodSpec.methodBuilder(PREFIX_ORDER_BY + StringUtils.toCamelCase(column.getColumnName()))
                     .addModifiers(Modifier.PUBLIC)
                     .addParameter(boolean.class, paramDesc)
-                    .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, mName))
+                    .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, annotatedTable.getSelectorName()))
                     .addStatement("orderBy($T.$L, $L)", TABLE, column.getColumnName().toUpperCase(), paramDesc)
                     .addStatement("return this")
                     .build();
 
             MethodSpec ORDER_BY2 = MethodSpec.methodBuilder(PREFIX_ORDER_BY + StringUtils.toCamelCase(column.getColumnName()))
                     .addModifiers(Modifier.PUBLIC)
-                    .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, mName))
+                    .returns(ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, annotatedTable.getSelectorName()))
                     .addStatement("orderBy($T.$L, false)", TABLE, column.getColumnName().toUpperCase())
                     .addStatement("return this")
                     .build();
@@ -249,11 +245,7 @@ public class SelectorGenerator {
             SELECTION_METHODS.add(ORDER_BY2);
         }
     }
-
-    public String getOutputFileName() {
-        return mName;
-    }
-
+    
     public JavaFile generateSelection(String outputPackage, String outputName) {
         TypeSpec outputSelection = buildClass(outputName);
         return JavaFile.builder(outputPackage, outputSelection).build();

@@ -19,5 +19,7 @@ public class Book {
     @Column
     public String author;
     @Column
+    public String genre;
+    @Column
     public Float rating;
 }
