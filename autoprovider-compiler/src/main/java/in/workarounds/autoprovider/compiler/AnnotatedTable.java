@@ -85,7 +85,7 @@ public class AnnotatedTable {
         Table tableAnn = element.getAnnotation(Table.class);
         String name = tableAnn.name();
         if(name.trim().isEmpty()) {
-            name = element.getSimpleName().toString();
+            name = String.format("%sTable", element.getSimpleName().toString());
         }
         return StringUtils.toSnakeCase(name);
     }
