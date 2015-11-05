@@ -77,7 +77,6 @@ public class ProviderProcessor extends AbstractProcessor {
 
         if(provider != null && tables.size() != 0) {
             ProviderGenerator providerGenerator = new ProviderGenerator(provider, tables);
-            System.out.println("############ " + provider.getProviderName());
             SQLiteOpenHelperGenerator sqLiteOpenHelperGenerator = new SQLiteOpenHelperGenerator(provider, tables);
             try {
                 providerGenerator.generateProvider(OUTPUT_PACKAGE, provider.getProviderName()).writeTo(filer);

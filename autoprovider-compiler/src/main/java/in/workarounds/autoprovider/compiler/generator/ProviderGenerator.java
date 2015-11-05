@@ -109,7 +109,7 @@ public class ProviderGenerator {
                     .addStatement("$L.addURI($L, $T.$L, $L)",
                             mUriMatcher,
                             mAuthority,
-                            ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, StringUtils.toCamelCase(annotatedTables.get(i).getTableName())),
+                            ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, annotatedTables.get(i).getTableName()),
                             TableGenerator.mTableName,
                             fieldName)
                     .build();
@@ -127,7 +127,7 @@ public class ProviderGenerator {
                     .addStatement("$L.addURI($L, $T.$L + \"/#\", $L)",
                             mUriMatcher,
                             mAuthority,
-                            ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, StringUtils.toCamelCase(annotatedTables.get(i).getTableName())),
+                            ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, annotatedTables.get(i).getTableName()),
                             TableGenerator.mTableName,
                             fieldName)
                     .build();
@@ -168,7 +168,6 @@ public class ProviderGenerator {
                 .addStatement("return null")
                 .build();
 
-        System.out.println("############### " + "insert is called");
         String paramContentValues = "values";
         INSERT = MethodSpec.methodBuilder(mInsert)
                 .addModifiers(Modifier.PUBLIC)
@@ -181,7 +180,6 @@ public class ProviderGenerator {
                 .endControlFlow()
                 .addStatement("return super.$L($L, $L)", mInsert, paramUri, paramContentValues)
                 .build();
-        System.out.println("############### " + "insert is finished");
 
         BULK_INSERT = MethodSpec.methodBuilder(mBulkInsert)
                 .addModifiers(Modifier.PUBLIC)
@@ -194,7 +192,6 @@ public class ProviderGenerator {
                 .endControlFlow()
                 .addStatement("return super.$L($L, $L)", mBulkInsert, paramUri, paramContentValues)
                 .build();
-        System.out.println("############### " + "bulkInsert is finished");
 
         String paramSelection = "selection";
         String paramSelectionArgs = "selectionArgs";
@@ -212,7 +209,6 @@ public class ProviderGenerator {
                 .endControlFlow()
                 .addStatement("return super.$L($L, $L, $L, $L)", mUpdate, paramUri, paramContentValues, paramSelection, paramSelectionArgs)
                 .build();
-        System.out.println("############### " + "update is finished");
 
         DELETE = MethodSpec.methodBuilder(mDelete)
                 .addModifiers(Modifier.PUBLIC)
@@ -227,7 +223,6 @@ public class ProviderGenerator {
                 .endControlFlow()
                 .addStatement("return super.$L($L, $L, $L)", mDelete, paramUri, paramSelection, paramSelectionArgs)
                 .build();
-        System.out.println("############### " + "delete is finished");
 
         String paramProjection = "projection";
         String paramSortOrder = "sortOrder";
@@ -247,7 +242,6 @@ public class ProviderGenerator {
                 .endControlFlow()
                 .addStatement("return super.$L($L, $L, $L, $L, $L)", mQuery, paramUri, paramProjection, paramSelection, paramSelectionArgs, paramSortOrder)
                 .build();
-        System.out.println("############### " + "query is finished");
 
         String paramQueryParams = "res";
         String paramId = "id";
@@ -316,13 +310,13 @@ public class ProviderGenerator {
             builder.add("case $L:\n", name1);
             builder.add("case $L:\n", name2);
             builder.addStatement("      $L.table = $L.$L", paramQueryParams,
-                    StringUtils.toCamelCase(table.getTableName()), TableGenerator.mTableName);
+                    table.getTableName(), TableGenerator.mTableName);
             builder.addStatement("      $L.idColumn = $L.$L", paramQueryParams,
-                    StringUtils.toCamelCase(table.getTableName()), table.getPrimaryColumn().getColumnName().toUpperCase());
+                    table.getTableName(), table.getPrimaryColumn().getColumnName().toUpperCase());
             builder.addStatement("      $L.tablesWithJoins = $L.$L", paramQueryParams,
-                    StringUtils.toCamelCase(table.getTableName()), TableGenerator.mTableName);
+                    table.getTableName(), TableGenerator.mTableName);
             builder.addStatement("      $L.orderBy = $L.$L", paramQueryParams,
-                    StringUtils.toCamelCase(table.getTableName()), TableGenerator.mDefaultOrder);
+                    table.getTableName(), TableGenerator.mDefaultOrder);
             builder.addStatement("break");
         }
         builder.add("default:\n");
@@ -337,11 +331,11 @@ public class ProviderGenerator {
             String name2 = String.format("%s_%s_ID", mUriTypePrefix, table.getTableName().toUpperCase());
             builder.add("case $L:\n", name1);
             builder.addStatement("      return $L + $T.$L", mTypeCursorDir,
-                    ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, StringUtils.toCamelCase(table.getTableName())),
+                    ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, table.getTableName()),
                     TableGenerator.mTableName);
             builder.add("case $L:\n", name2);
             builder.addStatement("      return $L + $T.$L", mTypeCursorItem,
-                    ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, StringUtils.toCamelCase(table.getTableName())),
+                    ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, table.getTableName()),
                     TableGenerator.mTableName);
         }
         builder.indent();

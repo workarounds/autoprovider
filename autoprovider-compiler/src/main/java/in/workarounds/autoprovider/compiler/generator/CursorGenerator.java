@@ -73,7 +73,7 @@ public class CursorGenerator {
         String simpleTypeName = splits[splits.length-1];
         CodeBlock codeBlock = CodeBlock.builder()
                 .add("$T res = get$LOrNull($L.$L);\n", annotatedColumn.getTypeInObject(),
-                        StringUtils.toCamelCase(simpleTypeName), StringUtils.toCamelCase(tableName), annotatedColumn.getColumnName().toUpperCase())
+                        StringUtils.toCamelCase(simpleTypeName), tableName, annotatedColumn.getColumnName().toUpperCase())
                 .build();
         return codeBlock;
     }

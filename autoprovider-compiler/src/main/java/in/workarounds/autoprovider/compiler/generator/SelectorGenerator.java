@@ -54,7 +54,7 @@ public class SelectorGenerator {
                 .addModifiers(Modifier.PROTECTED)
                 .addAnnotation(Override.class)
                 .returns(ClassUtils.URI)
-                .addStatement("return $L.$L", StringUtils.toCamelCase(annotatedTable.getTableName()), TableGenerator.mContentUri)
+                .addStatement("return $L.$L", annotatedTable.getTableName(), TableGenerator.mContentUri)
                 .build();
 
         String paramContentResolver = "contentResolver";
@@ -99,10 +99,9 @@ public class SelectorGenerator {
                 .build();
 
         String paramValue = "value";
-        ClassName TABLE = ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, StringUtils.toCamelCase(annotatedTable.getTableName()));
+        ClassName TABLE = ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, annotatedTable.getTableName());
         for(AnnotatedColumn column : annotatedTable.getColumns()) {
             if(column.getTypeInDb()== TypeMatcher.SQLiteType.TEXT) {
-                System.out.println("########### " + "equals should have been called");
                 MethodSpec EQUALS = MethodSpec.methodBuilder(column.getColumnName())
                         .addModifiers(Modifier.PUBLIC)
                         .addParameter(String[].class, paramValue)
@@ -111,7 +110,6 @@ public class SelectorGenerator {
                         .addStatement("addEquals($T.$L, $L)", TABLE, column.getColumnName().toUpperCase(), paramValue)
                         .addStatement("return this")
                         .build();
-                System.out.println("########### " + "equals was called");
 
                 MethodSpec NOT_EQUALS = MethodSpec.methodBuilder(column.getColumnName() + SUFFIX_NOT)
                         .addModifiers(Modifier.PUBLIC)
@@ -174,7 +172,6 @@ public class SelectorGenerator {
                         .addStatement("addEquals($T.$L, toObjectArray($L))", TABLE, column.getColumnName().toUpperCase(), paramValue)
                         .addStatement("return this")
                         .build();
-                System.out.println("########### " + "equals has been called");
 
                 MethodSpec NOT_EQUALS = MethodSpec.methodBuilder(String.format("%s%s", column.getColumnName(), SUFFIX_NOT))
                         .addModifiers(Modifier.PUBLIC)

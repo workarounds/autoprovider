@@ -163,7 +163,7 @@ public class SQLiteOpenHelperGenerator {
     private CodeBlock getDatabaseCreateStatements(List<AnnotatedTable> tables, String paramDb) {
         CodeBlock.Builder builder = CodeBlock.builder();
         for(AnnotatedTable table : tables) {
-            builder.addStatement("$L.execSQL($L.$L)", paramDb, StringUtils.toCamelCase(table.getTableName()), TableGenerator.mSQLCreate);
+            builder.addStatement("$L.execSQL($L.$L)", paramDb, table.getTableName(), TableGenerator.mSQLCreate);
         }
         return builder.build();
     }

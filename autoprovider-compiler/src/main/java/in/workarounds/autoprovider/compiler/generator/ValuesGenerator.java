@@ -1,6 +1,7 @@
 package in.workarounds.autoprovider.compiler.generator;
 
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
@@ -31,10 +32,12 @@ public class ValuesGenerator {
 
     private final String nUri = "uri";
     private final String nUpdate = "update";
+    private final String nPutObject = "putObject";
 
     private final MethodSpec URI;
     private final MethodSpec UPDATE1;
     private final MethodSpec UPDATE2;
+    private final MethodSpec PUT_OBJECT;
 
     private final List<MethodSpec> PUT_METHODS = new ArrayList<>();
     public ValuesGenerator(AnnotatedTable annotatedTable) {
@@ -45,7 +48,6 @@ public class ValuesGenerator {
                 .returns(ClassUtils.URI)
                 .addStatement("return $L.$L", annotatedTable.getTableName(), TableGenerator.mContentUri)
                 .build();
-        System.out.println("####### uri method has been built");
 
         String paramContentResolver = "contentResolver";
         String paramContext = "context";
@@ -65,7 +67,6 @@ public class ValuesGenerator {
                         paramWhere,
                         paramWhere)
                 .build();
-        System.out.println("####### update1 method has been built");
 
         UPDATE2 = MethodSpec.methodBuilder(nUpdate)
                 .addModifiers(Modifier.PUBLIC)
@@ -81,7 +82,6 @@ public class ValuesGenerator {
                         paramWhere,
                         paramWhere)
                 .build();
-        System.out.println("####### update2 method has been built");
 
         String paramValue = "value";
         ClassName classContentValues = ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, annotatedTable.getValuesName());
@@ -117,6 +117,24 @@ public class ValuesGenerator {
                 PUT_METHODS.add(nullMethodBuilder.build());
             }
         }
+
+        String paramObject = "object";
+        PUT_OBJECT = MethodSpec.methodBuilder(nPutObject)
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(ClassName.get(annotatedTable.getAnnotatedClassElement().asType()), paramObject)
+                .returns(classContentValues)
+                .addCode(getPutObjectCode(annotatedTable, paramObject))
+                .addStatement("return this")
+                .build();
+    }
+
+    private CodeBlock getPutObjectCode(AnnotatedTable annotatedTable, String paramObject) {
+        CodeBlock.Builder builder = CodeBlock.builder();
+        for(AnnotatedColumn column: annotatedTable.getColumns()) {
+            builder.addStatement("put$L($L.$L)", StringUtils.toCamelCase(column.getColumnName()),
+                    paramObject, column.getColumnName());
+        }
+        return builder.build();
     }
 
     public JavaFile generateValues(String outputPackage, String outputName) {
@@ -133,6 +151,7 @@ public class ValuesGenerator {
         builder.addMethod(UPDATE1);
         builder.addMethod(UPDATE2);
         builder.addMethods(PUT_METHODS);
+        builder.addMethod(PUT_OBJECT);
 
         return builder.build();
     }
