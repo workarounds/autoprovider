@@ -86,6 +86,9 @@ public class ValuesGenerator {
         String paramValue = "value";
         ClassName classContentValues = ClassName.get(ProviderProcessor.OUTPUT_PACKAGE, annotatedTable.getValuesName());
         for(AnnotatedColumn column : annotatedTable.getColumns()) {
+            if(column.isAutoIncrement()) {
+                continue;
+            }
             MethodSpec.Builder putMethodBuilder = MethodSpec.methodBuilder(PREFIX_PUT + StringUtils.toCamelCase(column.getColumnName()))
                     .addModifiers(Modifier.PUBLIC);
 
@@ -131,8 +134,10 @@ public class ValuesGenerator {
     private CodeBlock getPutObjectCode(AnnotatedTable annotatedTable, String paramObject) {
         CodeBlock.Builder builder = CodeBlock.builder();
         for(AnnotatedColumn column: annotatedTable.getColumns()) {
-            builder.addStatement("put$L($L.$L)", StringUtils.toCamelCase(column.getColumnName()),
-                    paramObject, column.getColumnName());
+            if(!column.isAutoIncrement()) {
+                builder.addStatement("put$L($L.$L)", StringUtils.toCamelCase(column.getColumnName()),
+                        paramObject, column.getColumnName());
+            }
         }
         return builder.build();
     }
