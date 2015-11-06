@@ -22,4 +22,18 @@ public class Book {
     public String genre;
     @Column
     public Float rating;
+
+    public Book() {}
+
+    public Book(String name, String author, String genre, Float rating) {
+        this.name = name;
+        this.author = author;
+        this.genre = genre;
+        this.rating = rating;
+    }
+
+    @Override
+    public String toString() {
+        return id + " " + name + " " + author + " " + genre + " " + rating;
+    }
 }

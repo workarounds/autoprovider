@@ -12,7 +12,17 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+
+        <provider
+            android:authorities="in.workarounds.samples.autoprovider.provider"
+            android:name=".provider.SampleProvider"
+            android:exported="false"
+            android:syncable="true"/>
     </application>
 
 </manifest>

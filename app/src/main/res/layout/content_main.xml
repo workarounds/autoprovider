@@ -10,4 +10,46 @@
     tools:showIn="@layout/activity_main"
     tools:context="in.workarounds.samples.autoprovider.MainActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_populate_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Populate Data"/>
+
+        <EditText
+            android:id="@+id/et_query_book"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Book name"/>
+
+        <Button
+            android:id="@+id/btn_query_books"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Query Books"/>
+
+        <EditText
+            android:id="@+id/et_query_movie"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Movie director"/>
+
+        <Button
+            android:id="@+id/btn_query_movies"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Query Movies"/>
+
+        <TextView
+            android:id="@+id/tv_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
 </RelativeLayout>

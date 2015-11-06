@@ -27,7 +27,7 @@ import static in.workarounds.autoprovider.compiler.utils.TypeMatcher.SQLiteType;
 public class TableGenerator {
 
     public static final String NOT_NULL = "NOT NULL";
-    public static final String AUTO_INCREMENT = "AUTO INCREMENT";
+    public static final String AUTO_INCREMENT = "AUTOINCREMENT";
     public static final String PRIMARY_KEY = "PRIMARY KEY";
     public static final String SQL_TYPE_INTEGER = "INTEGER";
     public static final String SQL_TYPE_TEXT = "TEXT";
@@ -151,7 +151,7 @@ public class TableGenerator {
 
     private CodeBlock getSQLCreateStatement(AnnotatedTable annotatedTable) {
         CodeBlock.Builder builder = CodeBlock.builder()
-                .add("CREATE TABLE $L (", annotatedTable.getTableName());
+                .add("CREATE TABLE IF NOT EXISTS $L (", annotatedTable.getTableName());
         List<AnnotatedColumn> annotatedColumns = annotatedTable.getColumns();
         for(int i=0;i<annotatedColumns.size();i++) {
             AnnotatedColumn annotatedColumn = annotatedColumns.get(i);

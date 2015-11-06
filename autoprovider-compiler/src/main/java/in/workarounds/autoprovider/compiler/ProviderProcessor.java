@@ -30,11 +30,12 @@ import in.workarounds.autoprovider.compiler.generator.SelectorGenerator;
 import in.workarounds.autoprovider.compiler.generator.TableGenerator;
 import in.workarounds.autoprovider.compiler.generator.CursorGenerator;
 import in.workarounds.autoprovider.compiler.generator.ValuesGenerator;
+import sun.java2d.pipe.OutlineTextRenderer;
 
 @AutoService(Processor.class)
 public class ProviderProcessor extends AbstractProcessor {
 
-    public static final String OUTPUT_PACKAGE = "in.workarounds.autoprovider";
+    public static String OUTPUT_PACKAGE = "in.workarounds.autoprovider.samples";
 
     private Types typeUtils;
     private Elements elementUtils;
@@ -60,6 +61,11 @@ public class ProviderProcessor extends AbstractProcessor {
         TypeElement providerElement = getProviderElement(roundEnv);
         if(providerElement != null) {
             provider = new AnnotatedProvider(providerElement, elementUtils);
+        }
+        if(provider!=null) {
+            OUTPUT_PACKAGE = provider.getAuthority();
+        } else {
+            OUTPUT_PACKAGE = "in.workarounds.autoprovider";
         }
 
         for(Element tableElement : roundEnv.getElementsAnnotatedWith(Table.class)) {
