@@ -24,3 +24,30 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
 }
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'autoprovider'
+    orgName = 'workarounds'
+
+    publishedGroupId = 'in.workarounds.autoprovider'
+    libraryName = 'Autoprovider'
+    artifact = 'autoprovider'
+
+    libraryDescription = 'Content provider generator using annotation processing'
+
+    siteUrl = 'https://github.com/workarounds/autoprovider'
+    gitUrl = 'https://github.com/workarounds/autoprovider.git'
+
+    libraryVersion = '0.0.7'
+
+    developerId = 'workarounds'
+    developerName = 'Workarounds'
+    developerEmail = 'contact@workarounds.in'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+apply from: 'https://gist.githubusercontent.com/themadhukiran/6fb1b85f8be3d2bba733/raw/33bbbd3fbc103276cbb48d4a6e3c5e4d12e5f555/installv1.gradle'
+apply from: 'https://gist.githubusercontent.com/themadhukiran/e85785036b9ef3b85c63/raw/1fd9bc500586ddd2780fe045aeea05c3bb72e0d8/bintrayv1.gradle'
