@@ -71,7 +71,7 @@ public class SelectorGenerator {
                 .beginControlFlow("if ($L == null)", paramCursor)
                 .addStatement("return null")
                 .endControlFlow()
-                .addStatement("return new $L($L)", MODEL_CURSOR,
+                .addStatement("return new $T($L)", MODEL_CURSOR,
                         paramCursor)
                 .build();
 
