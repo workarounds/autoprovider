@@ -18,6 +18,7 @@ import in.workarounds.autoprovider.compiler.AnnotatedTable;
 import in.workarounds.autoprovider.compiler.ProviderProcessor;
 import in.workarounds.autoprovider.compiler.utils.ClassUtils;
 import in.workarounds.autoprovider.compiler.utils.StringUtils;
+import sun.swing.StringUIClientPropertyKey;
 
 import static in.workarounds.autoprovider.compiler.utils.TypeMatcher.SQLiteType;
 
@@ -59,7 +60,7 @@ public class TableGenerator {
 
         TABLE_NAME = FieldSpec.builder(String.class, mTableName)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                .initializer("$S", annotatedTable.getTableName()).build();
+                .initializer("$S", StringUtils.toSnakeCase(annotatedTable.getTableName())).build();
 
         CONTENT_URI = FieldSpec.builder(ClassUtils.URI, mContentUri)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
