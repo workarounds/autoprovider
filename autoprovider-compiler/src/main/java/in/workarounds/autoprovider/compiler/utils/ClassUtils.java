@@ -22,6 +22,7 @@ public interface ClassUtils {
     ClassName CONTENT_VALUES = ClassName.get("android.content", "ContentValues");
     ClassName CONTENT_RESOLVER = ClassName.get("android.content", "ContentResolver");
     ClassName NULLABLE = ClassName.get("android.support.annotation", "Nullable");
+    ClassName BASE_COLUMNS = ClassName.get("android.provider", "BaseColumns");
 
     ClassName ABSTRACT_CURSOR = ClassName.get("in.workarounds.autoprovider", "AbstractCursor");
     ClassName BASE_PROVIDER = ClassName.get("in.workarounds.autoprovider", "BaseProvider");
