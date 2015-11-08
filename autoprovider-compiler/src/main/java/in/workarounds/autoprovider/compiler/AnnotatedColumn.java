@@ -28,6 +28,7 @@ public class AnnotatedColumn {
     private boolean primaryKey;
     private boolean notNull;
     private boolean autoIncrement;
+    private boolean androidId;
 
     public AnnotatedColumn(Element columnElement, Elements elementUtils) throws IllegalArgumentException {
         if(isValidColumn(columnElement)) {
@@ -40,6 +41,7 @@ public class AnnotatedColumn {
                 if(!typeInObject.toString().equals(Long.class.getCanonicalName())) {
                     throw new IllegalArgumentException(ERROR_MSG_ANDROID_ID_NOT_LONG);
                 }
+                androidId = true;
                 primaryKey = true;
                 autoIncrement = true;
                 notNull = true;
@@ -51,6 +53,7 @@ public class AnnotatedColumn {
                     throw new IllegalArgumentException(ERROR_MSG_PRIMARY_KEY_NOT_LONG);
                 }
                 primaryKey = true;
+                notNull = true;
             }
 
             AutoIncrement autoIncrementAnn = columnElement.getAnnotation(AutoIncrement.class);
@@ -113,5 +116,9 @@ public class AnnotatedColumn {
 
     public boolean isAutoIncrement() {
         return autoIncrement;
+    }
+
+    public boolean hasAndroidId() {
+        return androidId;
     }
 }
