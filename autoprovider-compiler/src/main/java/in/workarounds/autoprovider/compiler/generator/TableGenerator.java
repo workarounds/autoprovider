@@ -70,9 +70,14 @@ public class TableGenerator {
                 .build();
 
         for(AnnotatedColumn annotatedColumn : annotatedTable.getColumns()) {
-            FieldSpec column = FieldSpec.builder(String.class, annotatedColumn.getColumnName().toUpperCase())
-                    .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                    .initializer("$S", annotatedColumn.getColumnName()).build();
+            FieldSpec.Builder builder = FieldSpec.builder(String.class, annotatedColumn.getColumnName().toUpperCase())
+                    .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL);
+            if(annotatedColumn.hasAndroidId()) {
+                builder.initializer("$T._ID", ClassUtils.BASE_COLUMNS);
+            } else {
+                builder.initializer("$S", annotatedColumn.getColumnName());
+            }
+            FieldSpec column = builder.build();
             FieldSpec query = FieldSpec.builder(String.class,
                     mStatementPrefix+annotatedColumn.getColumnName().toUpperCase()+mStatementSuffix)
                     .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
@@ -83,7 +88,7 @@ public class TableGenerator {
 
         SQL_INSERT = FieldSpec.builder(String.class, mSQLInsert)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                .initializer("$S", getSQLInsertStatement(annotatedTable).toString())
+                .initializer("$L", getSQLInsertStatement(annotatedTable).toString())
                 .build();
 
         ALL_COLUMNS = FieldSpec.builder(ArrayTypeName.of(String.class), mAllColumns)
@@ -98,7 +103,7 @@ public class TableGenerator {
 
         SQL_CREATE = FieldSpec.builder(String.class, mSQLCreate)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                .initializer("$S", getSQLCreateStatement(annotatedTable).toString())
+                .initializer("$L", getSQLCreateStatement(annotatedTable).toString())
                 .build();
 
         DEFAULT_ORDER = FieldSpec.builder(String.class, mDefaultOrder)
@@ -129,57 +134,61 @@ public class TableGenerator {
 
     private CodeBlock getSQLInsertStatement(AnnotatedTable annotatedTable) {
         CodeBlock.Builder builder = CodeBlock.builder()
-                .add("INSERT INTO $L (", annotatedTable.getTableName());
+                .add("\"INSERT INTO $L ( \" + ", annotatedTable.getTableName());
         List<AnnotatedColumn> annotatedColumnList = annotatedTable.getColumns();
         for(int i=0; i<annotatedColumnList.size(); i++) {
             AnnotatedColumn annotatedColumn = annotatedColumnList.get(i);
-            builder.add(" $L", annotatedColumn.getColumnName());
+            builder.add(" $L + ", annotatedColumn.getColumnName().toUpperCase());
             if(i!=annotatedColumnList.size()-1) {
-                builder.add(",");
+                builder.add("\", \" + ");
             }
         }
-        builder.add(" ) VALUES ( ");
+        StringBuilder statementBuilder = new StringBuilder();
+        statementBuilder.append(" ) VALUES ( ");
         for(int i=0; i<annotatedColumnList.size(); i++) {
-            builder.add(" ?");
+            statementBuilder.append(" ?");
             if(i!=annotatedColumnList.size()-1) {
-                builder.add(",");
+                statementBuilder.append(", ");
             }
         }
-        builder.add(" )");
+        statementBuilder.append(" )");
+        builder.add("$S", statementBuilder.toString());
         return builder.build();
     }
 
     private CodeBlock getSQLCreateStatement(AnnotatedTable annotatedTable) {
         CodeBlock.Builder builder = CodeBlock.builder()
-                .add("CREATE TABLE IF NOT EXISTS $L (", annotatedTable.getTableName());
+                .add("\"CREATE TABLE IF NOT EXISTS $L ( \" + ", annotatedTable.getTableName());
         List<AnnotatedColumn> annotatedColumns = annotatedTable.getColumns();
         for(int i=0;i<annotatedColumns.size();i++) {
             AnnotatedColumn annotatedColumn = annotatedColumns.get(i);
-            builder.add(" $L", annotatedColumn.getColumnName());
+            builder.add(" $L + ", annotatedColumn.getColumnName().toUpperCase());
             SQLiteType type = annotatedColumn.getTypeInDb();
+            StringBuilder statementBuilder = new StringBuilder();
             if(type==SQLiteType.INTEGER) {
-                builder.add(" $L", SQL_TYPE_INTEGER);
+                statementBuilder.append(" ").append(SQL_TYPE_INTEGER);
             } else if (type==SQLiteType.TEXT) {
-                builder.add(" $L", SQL_TYPE_TEXT);
+                statementBuilder.append(" ").append(SQL_TYPE_TEXT);
             } else if (type==SQLiteType.REAL) {
-                builder.add(" $L", SQL_TYPE_REAL);
+                statementBuilder.append(" ").append(SQL_TYPE_REAL);
             } else if (type==SQLiteType.BLOB) {
-                builder.add(" $L", SQL_TYPE_BLOB);
+                statementBuilder.append(" ").append(SQL_TYPE_BLOB);
             }
             if(annotatedColumn.isNotNull()) {
-                builder.add(" $L", NOT_NULL);
+                statementBuilder.append(" ").append(NOT_NULL);
             }
             if(annotatedColumn.isPrimaryKey()) {
-                builder.add(" $L", PRIMARY_KEY);
+                statementBuilder.append(" ").append(PRIMARY_KEY);
             }
             if(annotatedColumn.isAutoIncrement()) {
-                builder.add(" $L", AUTO_INCREMENT);
+                statementBuilder.append(" ").append(AUTO_INCREMENT);
             }
             if(i!=annotatedColumns.size()-1) {
-                builder.add(",");
+                statementBuilder.append(", ");
             }
+            builder.add("$S + ", statementBuilder.toString());
         }
-        builder.add(" )");
+        builder.add("\" )\"");
         return builder.build();
     }
 
