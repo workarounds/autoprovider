@@ -85,9 +85,9 @@ public class AnnotatedTable {
         Table tableAnn = element.getAnnotation(Table.class);
         String name = tableAnn.name();
         if(name.trim().isEmpty()) {
-            name = String.format("%s_table", element.getSimpleName().toString());
+            name = String.format("%sTable", element.getSimpleName().toString());
         }
-        return StringUtils.toCamelCase(name);
+        return name;
     }
 
     public String getCursorName() {
