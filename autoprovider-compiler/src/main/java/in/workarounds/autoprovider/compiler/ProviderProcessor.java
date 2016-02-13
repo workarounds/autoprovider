@@ -24,13 +24,12 @@ import javax.tools.Diagnostic;
 
 import in.workarounds.autoprovider.AutoProvider;
 import in.workarounds.autoprovider.Table;
+import in.workarounds.autoprovider.compiler.generator.CursorGenerator;
 import in.workarounds.autoprovider.compiler.generator.ProviderGenerator;
 import in.workarounds.autoprovider.compiler.generator.SQLiteOpenHelperGenerator;
 import in.workarounds.autoprovider.compiler.generator.SelectorGenerator;
 import in.workarounds.autoprovider.compiler.generator.TableGenerator;
-import in.workarounds.autoprovider.compiler.generator.CursorGenerator;
 import in.workarounds.autoprovider.compiler.generator.ValuesGenerator;
-import sun.java2d.pipe.OutlineTextRenderer;
 
 @AutoService(Processor.class)
 public class ProviderProcessor extends AbstractProcessor {

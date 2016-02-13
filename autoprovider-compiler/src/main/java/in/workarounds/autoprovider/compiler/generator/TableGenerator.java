@@ -18,7 +18,6 @@ import in.workarounds.autoprovider.compiler.AnnotatedTable;
 import in.workarounds.autoprovider.compiler.ProviderProcessor;
 import in.workarounds.autoprovider.compiler.utils.ClassUtils;
 import in.workarounds.autoprovider.compiler.utils.StringUtils;
-import sun.swing.StringUIClientPropertyKey;
 
 import static in.workarounds.autoprovider.compiler.utils.TypeMatcher.SQLiteType;
 
