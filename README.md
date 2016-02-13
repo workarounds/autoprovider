@@ -3,6 +3,8 @@ Autoprovider
 
 Content provider generator for android that uses annotation processing. All helper classes are generated based on a Java Object.
 
+[Documentation](https://github.com/workarounds/autoprovider/wiki) is WIP. A sample app is provided. 
+
 Download
 --------
 Gradle:
