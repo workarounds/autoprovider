@@ -109,5 +109,20 @@ public class MainActivity extends AppCompatActivity {
         return ContentUris.parseId(uri);
     }
 
+    SubObject obj = new SubObject(1, "two");
+    int one = obj.one;
+}
 
+class SubObject {
+    public int one;
+    public String two;
+
+    public SubObject(int one, String two) {
+        this.one = one;
+        this.two = two;
+    }
+
+    public void setOne(int one) {
+        this.one = one;
+    }
 }

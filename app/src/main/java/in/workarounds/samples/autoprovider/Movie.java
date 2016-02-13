@@ -16,6 +16,7 @@ public class Movie {
     @Column
     public String director;
 
+    SubObject object = new SubObject(1, "two");
     public Movie() {}
 
     public Movie(String name, String director) {
